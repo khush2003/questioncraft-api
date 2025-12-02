@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+pdf2image
+langchain
+langchain-community
+langchain-core
+dotenv
+pydantic
+pypdfium2
+langchain-classic
+openai
+python-multipart
