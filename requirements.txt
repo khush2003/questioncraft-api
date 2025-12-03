@@ -10,6 +10,6 @@ pypdfium2
 langchain-classic
 openai
 python-multipart
---index-url https://www.paddlepaddle.org.cn/packages/stable/cpu/
+--extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cpu/
 paddlepaddle==3.2.2
 paddleocr==3.3.2
