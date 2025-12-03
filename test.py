@@ -1,13 +1,13 @@
 
-from paddleocr import PaddleOCR
+# from paddleocr import PaddleOCR
 from PIL import Image
 import numpy as np
 import asyncio
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from pypdfium2 import PdfDocument
+# from pypdfium2 import PdfDocument
 import logging
 
-ocr = PaddleOCR(use_angle_cls=True, lang='en') # need to run only once to download and load model into memory
+# ocr = PaddleOCR(use_angle_cls=True, lang='en') # need to run only once to download and load model into memory
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -26,23 +26,23 @@ logging.basicConfig(level=logging.INFO)
 
 img_path = 'img_test.png'
 
-def perform_ocr(img):
-    try:
-        img = np.array(img)
-        result = ocr.ocr(img)
-        text = ""
-        for idx in range(len(result)):
-            res = result[idx]
-            for line in res:
-                text += line[1][0] + " "
-                print(line[1][0])
+# def perform_ocr(img):
+#     try:
+#         img = np.array(img)
+#         result = ocr.ocr(img)
+#         text = ""
+#         for idx in range(len(result)):
+#             res = result[idx]
+#             for line in res:
+#                 text += line[1][0] + " "
+#                 print(line[1][0])
 
-        print("\n\n\n ---------- \n")
-        print(text)
-        return text
-    except Exception as e:
-        logging.error(f"Error processing image: {e}")
-        return ""
+#         print("\n\n\n ---------- \n")
+#         print(text)
+#         return text
+#     except Exception as e:
+#         logging.error(f"Error processing image: {e}")
+#         return ""
     
     
 # if __name__ == "__main__":

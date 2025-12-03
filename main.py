@@ -587,7 +587,7 @@ async def pdf(file: UploadFile = File(...), fastMode: Optional[bool] = False):
 
     # Read the file as bytes
     file_bytes = await file.read()
-    from test import perform_ocr
+    # from test import perform_ocr
     
     print(file)
 
@@ -605,9 +605,13 @@ async def pdf(file: UploadFile = File(...), fastMode: Optional[bool] = False):
                 text = text_page.get_text_range()
                 abc = text
             else:
-                image = page.render(scale=3)
-                pil_image = image.to_pil()
-                abc = perform_ocr(pil_image)
+                text_page = page.get_textpage()
+                text = text_page.get_text_range()
+                abc = text
+                # Removed the actual ones, since running paddleOCR on server is challenging
+                # image = page.render(scale=3)
+                # pil_image = image.to_pil()
+                # abc = perform_ocr(pil_image)
             texts.append(abc)
             yield json.dumps({"text": abc, "pageNum": i + 1}) + "\n"
 
