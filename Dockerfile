@@ -16,7 +16,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install dependencies
-RUN pip install --requirement requirements.txt --upgrade --upgrade-strategy only-if-needed --no-warn-script-location --no-warn-conflicts --force-reinstall --no-compile --disable-pip-version-check --no-cache-dir --user
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 # Copy the application code
 COPY . .
