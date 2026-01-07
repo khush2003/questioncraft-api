@@ -1,0 +1,205 @@
+Page Content: $$( Fine Tuning Large language models for Automated English
+speaking proficiency Assessment using Multimodal Linguistic and
+Prosodic Features
+Khush Agarwal, Jonathan Hoyin Chan
+Innovative Cognitive Computing Lab
+King Mongkut’s University of Technology Thonburi
+Paper ID: 2394 )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 277, 'chunk_length': 277, 'page_number': 1} )$$ 
+
+Page Content: $$( Background
+Standardized English tests using human evaluation are often costly, time-consuming, and
+subjective.
+Automated assessment technologies with early efforts focusing on written language have
+emerged, aiming for scalable and objective evaluations.
+Spoken proficiency poses a significantly greater challenge due to its inherent variability.
+Automated Spoken Language Assessment (ASLA) offers a scalable alternative.
+Pretrained on massive text corpora, LLMs possess strong linguistic priors and can evaluate
+transcripts for grammar, content, and coherence.
+LLMs struggle with ASR errors and lack acoustic context.
+We propose fine-tuning LLMs using QLoRA on a spoken language dataset. Our proposed
+solution integrates transcripts with acoustic-prosodic features and linguistic features as text and
+introduces acoustic context in LLMs. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 849, 'chunk_length': 849, 'page_number': 2} )$$ 
+
+Page Content: $$( s and linguistic features as text and
+introduces acoustic context in LLMs. )$$  
+Metadata: $$( {'chunk_index': 1, 'start_position': 774, 'end_position': 849, 'chunk_length': 75, 'page_number': 2} )$$ 
+
+Page Content: $$( We train and evaluate three LLM variants (Qwen 3 8b, Qwen 3 1.7b, and Qwen
+2.5 7b) to examine the impact of model size and architecture on ASLA
+performance.
+We conduct ablations against three baselines, isolating the effects of prosodic
+features, linguistic features, and fine-tuning to evaluate their respective
+contributions.
+We provide extensive evaluation using RMSE, Pearson correlation (PCC),
+Spearman’s rank correlation (SRC), and Kendall’s tau (KRC), including detailed
+per-score and model-variant analyses, and examine the impact of post-prediction
+calibration on accuracy and bias reduction.
+In this study )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 625, 'chunk_length': 625, 'page_number': 3} )$$ 
+
+Page Content: $$( Large-scale dataset of monologic L2 English learner speech from diverse L1 backgrounds.
+The data comprises responses to practice speaking tests, including personal interviews and
+descriptive long turns.
+Dataset: Speak & Improve Corpus 2025
+Speak & Improve Corpus 2025 )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 271, 'chunk_length': 271, 'page_number': 4} )$$ 
+
+Page Content: $$( Methodology )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 11, 'chunk_length': 11, 'page_number': 5} )$$ 
+
+Page Content: $$( Dataset Preprocessing
+Fig. Multi-Stage Data Preprocessing Pipeline for LLM Input )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 81, 'chunk_length': 81, 'page_number': 6} )$$ 
+
+Page Content: $$( Dataset Preprocessing
+These tables present the extracted
+prosodic features and the provided
+Linguistic marks/tags )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 116, 'chunk_length': 116, 'page_number': 7} )$$ 
+
+Page Content: $$( Instruction: System message defining the
+grading task
+User Prompt: Questions + Annotated
+Transcripts + Prosodic Features + Lingustic
+Features
+Assistant: Numeric CEFR score
+Prepared Data
+Format of prepared Data
+Fig. 1. Example of the structured input provided to the LLM for a
+single training sample )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 307, 'chunk_length': 307, 'page_number': 8} )$$ 
+
+Page Content: $$( Data Distribution
+The data subset (3,860 samples) was split into training (80%), test (10%), and evaluation
+(10%) sets using stratification.
+Scores are concentrated in the B1–C1 range (3.0–5.0), reflecting the proficiency of most
+S&I platform learners. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 256, 'chunk_length': 256, 'page_number': 9} )$$ 
+
+Page Content: $$( Training
+We ran this training on Qwen 3 1.7b, Qwen 3 8b and Qwen 2.5 7b models.
+In addition, to assess generalizability, we also ran training on LLaMA 3 8b and Mistral 7b v0.3 models.
+*Hardware: Single NVIDIA A100 80 GB GPU; training time < 30 minutes. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 255, 'chunk_length': 255, 'page_number': 10} )$$ 
+
+Page Content: $$( Evaluation
+Predictions were compared to human-assigned scores using the following metrics:
+Root Mean Square Error (RMSE), which measures average prediction error
+Pearson Correlation Coefficient (PCC), capturing linear association
+Spearman’s Rank Correlation (SRC) and Kendall’s Rank Correlation (KRC),
+assessing monotonic and ordinal agreement, respectively.
+Accuracy within a margin, reporting the proportion of predictions within 0.5 (% ≤
+0.5) and 1.0 (% ≤ 1.0) of the true score, providing an intuitive measure of closeness. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 534, 'chunk_length': 534, 'page_number': 11} )$$ 
+
+Page Content: $$( Calibration
+To assess whether post-prediction calibration could improve performance, we
+evaluated four methods:
+Isotonic Regression: Non-parametric, monotonic mapping that preserves
+prediction order while fitting to true scores.
+Linear Regression: Simple linear transformation between predicted and true
+scores, serving as a baseline.
+Temperature Scaling: Rescales predictions via a single learned temperature
+parameter, commonly used in neural network calibration.
+Dirichlet Calibration: Adapted for regression by discretizing scores into bins
+and applying smoothing to align predicted and empirical distributions. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 625, 'chunk_length': 625, 'page_number': 12} )$$ 
+
+Page Content: $$( Results
+The Qwen 2.5 7b model achieved the best overall performance, with the lowest RMSE and strongest
+correlations. This is surprising since it outperforms the newer and larger Qwen 3 8b model suggesting that the
+architecture of Qwen 2.5 7b model is more suited for this task.
+Within the Qwen 3 family, the larger 8b model consistently outperformed the smaller 1.7b variant.
+Overall the models have better performance across all metrics, particularly % ≤ 0.5 and % ≤ 1.0 after calibration
+suggesting it is effective for correcting scale mismatches in poorly aligned models. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 581, 'chunk_length': 581, 'page_number': 13} )$$ 
+
+Page Content: $$( Results
+Testing different calibrations on various models show that Isotonic Regression outperformed
+alternative methods across most metrics, establishing isotonic regression as the most reliable
+post-processing approach )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 222, 'chunk_length': 222, 'page_number': 14} )$$ 
+
+Page Content: $$( Ablations
+We performed various ablation studies to test the effects of various components on
+Qwen 3 8b model.
+Pretrained: Zero-shot evaluation
+Reduced Input: Transcripts only (no prosody/annotations)
+Linguistic Only: Transcripts + Annotations (No prosody) )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 260, 'chunk_length': 260, 'page_number': 15} )$$ 
+
+Page Content: $$( Results
+Removing prosodic features and linguistic
+features dropped performance.
+Pretrained model performs the worst.
+Calibration improves RMSE for pretrained
+but correlations remain low, highlighting
+importance of finetuning.
+Cross-model results show that the proposed
+pipeline is architecture-agnostic. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 311, 'chunk_length': 311, 'page_number': 16} )$$ 
+
+Page Content: $$( Per-Score Analysis
+Per-score analysis revealed systematic bias due to data imbalance at extremes:
+Low score predictions are overestimated and High score predictions are underestimated.
+Sweet Spot: The model is highly accurate in the B1-B2 range where data is dense.
+Calibration concentrates the data towards the middle improving alignment with true scores but limits
+differenciation at the extremes. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 404, 'chunk_length': 404, 'page_number': 17} )$$ 
+
+Page Content: $$( Conclusion
+This study charts a practical path for integrating scalable LLMs into ASLA. It
+demonstrates that fine-tuning on multimodal data (text + prosody) significantly
+outperforms text-only baselines.
+Advanced LLMs can be effectively integrated into automated CEFR assessment,
+with Qwen 2.5 7B showing the strongest performance.
+Combining linguistic and prosodic features, along with post-prediction calibration
+(especially isotonic regression), significantly improves accuracy.
+Per-score analysis reveals central-tendency bias and reduced performance at
+proficiency extremes, highlighting key areas for future improvement.
+Overall, the study provides a roadmap for developing more accurate, interpretable,
+and scalable ASLA systems. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 746, 'chunk_length': 746, 'page_number': 18} )$$ 
+
+Page Content: $$( Limitations
+The study is limited by a small dataset that strongly influences model behavior.
+Training and evaluation data are concentrated in intermediate proficiency levels
+(B1–B2). Lower (A2) and higher (C1) proficiency levels are sparsely represented.
+This uneven distribution limits the model’s ability to learn robust patterns for
+underrepresented proficiency ranges. As a result, model accuracy decreases at the
+lower and upper ends of the CEFR scale. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 463, 'chunk_length': 463, 'page_number': 19} )$$ 
+
+Page Content: $$( Future Work
+Future work could explore finetuning larger LLMs or adopting multimodal
+LLMs to improve accuracy.
+Acoustic-prosodic cues could be studied via ablation and interpretability
+methods (e.g., SHAP) to identify influential features.
+Synthetic chain-of-thought demonstrations may help models internalize
+reasoning steps and improve scoring reliability.
+Multi-task learning—predicting diagnostic sub-features (disfluencies,
+pronunciation errors, speech rate) alongside CEFR scores—could yield
+deeper insights into learner performance.
+Leveraging larger, more balanced datasets or incorporating bias-mitigation
+strategies could help improve model robustness, particularly at performance
+extremes. )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 711, 'chunk_length': 711, 'page_number': 20} )$$ 
+
+Page Content: $$( ThankyouandFeelfree toreachoutforanyfurtherquestions
+E-mail, Author 1 khush.agar@kmutt.ac.th
+E-mail, Author 2 jonathan@sit.kmutt.ac.th
+Address Innovative Cognitive Computing
+12A Floor, Learning Exchange (LX), King Mongkut’s University of Technology Thonburi
+126 Pracha Uthit Rd., Bang Mod, Thung Khru, Bangkok, Thailand 10140
+CONTACT US )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 342, 'chunk_length': 342, 'page_number': 21} )$$ 
+
+Page Content: $$( Hyperparameter Configuration
+Fine-tuning used the SFTConfig
+class from the trl library
+Unsloth was used to accelerate
+training )$$  
+Metadata: $$( {'chunk_index': 0, 'start_position': 0, 'end_position': 130, 'chunk_length': 130, 'page_number': 22} )$$ 
+

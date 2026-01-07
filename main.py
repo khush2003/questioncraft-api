@@ -10,7 +10,7 @@ from fastapi.responses import StreamingResponse
 from langchain_community.chat_models import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from dotenv import load_dotenv
-from langchain_community.embeddings.huggingface import HuggingFaceInferenceAPIEmbeddings
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from langchain_community.vectorstores.faiss import FAISS
 from pdf2image import convert_from_bytes
 from pydantic import BaseModel
@@ -41,7 +41,7 @@ class ChatOpenRouter(ChatOpenAI):
     model_name: str
 
     def __init__(self, model_name: str, openai_api_key: Optional[str] = None, openai_api_base: str = "https://openrouter.ai/api/v1", **kwargs):
-        openai_api_key = openai_api_key or os.getenv('OPENROUTER_API_KEY_2')
+        openai_api_key = openai_api_key or os.getenv('OPENROUTER_API_KEY')
         super().__init__(openai_api_base=openai_api_base,
                          openai_api_key=openai_api_key,
                          model_name=model_name, **kwargs)
@@ -63,10 +63,11 @@ app = FastAPI()
 
 
 
-embeddings = HuggingFaceInferenceAPIEmbeddings(
-    model_name="ggrn/e5-small-v2",
-    api_key= os.getenv('HF_KEY')
-);
+embeddings = HuggingFaceEndpointEmbeddings(
+    model="intfloat/multilingual-e5-large-instruct",
+    huggingfacehub_api_token= os.getenv('HF_KEY'),
+    # task="sentence-similarity"
+)
 
 # vectorstore: FAISS = FAISS.from_texts(texts=["sa"], embedding=embeddings)
 # vectorstore.save_local("vector_store")
@@ -85,7 +86,7 @@ embeddings = HuggingFaceInferenceAPIEmbeddings(
 llm = ChatOpenRouter(model_name="meta-llama/llama-3.2-3b-instruct:free")
 llmLarge = ChatOpenRouter(model_name="nousresearch/hermes-3-llama-3.1-405b:free")
 llmDefaultLarge = ChatOpenRouter(model_name="meta-llama/llama-3.1-405b-instruct:free")
-llmQwen = ChatOpenRouter(model_name="qwen/qwen-2-7b-instruct:free")
+llmQwen = ChatOpenRouter(model_name="qwen/qwen3-8b")
 
 llmSmall = ChatOpenRouter(model_name="meta-llama/llama-3.2-1b-instruct:free")
 llm70b = ChatOpenRouter(model_name="meta-llama/llama-3.1-70b-instruct:free")
@@ -93,8 +94,8 @@ geminiPro = ChatOpenRouter(model_name="google/gemini-flash-1.5-8b-exp")
 liquid40b = ChatOpenRouter(model_name="liquid/lfm-40b:free")
 phi14b = ChatOpenRouter(model_name="microsoft/phi-3-medium-128k-instruct:free")
 
-llmHERMES = ChatOpenRouter(model_name="nousresearch/hermes-3-llama-3.1-405b")
-llmLAMA = ChatOpenRouter(model_name="meta-llama/llama-3.1-405b-instruct")
+llmHERMES = ChatOpenRouter(model_name="z-ai/glm-4.7")
+llmLAMA = ChatOpenRouter(model_name="z-ai/glm-4.7")
 
 
 # system_prompt = "You answer in math"
@@ -143,10 +144,12 @@ async def create_embeddings(request: EmbeddingRequest):
     for chunk in allChunks:
         documents.append(Document(page_content=chunk['chunk'], metadata=chunk['metadata']))
         
-    print(documents[-1])
+    # print(documents[-1])
     save_documents_to_file(documents)
             
     uuids = [str(uuid4()) for _ in range(len(documents))]
+    print("Documents length: ", len(documents))
+    print("No Error Yet")
     vectorstore: FAISS = FAISS.from_documents(documents=documents, ids=uuids, embedding=embeddings)
     vectorstore.save_local("vector_store")
 
@@ -452,8 +455,8 @@ async def get_topics(number: int):
     )
     print("Passed 1")
 
-    llm.temperature = 0
-    chain = create_stuff_documents_chain(llm, promptSummary)
+    llmQwen.temperature = 0
+    chain = create_stuff_documents_chain(llmQwen, promptSummary)
     print("Passed 2")
     print(documents)
     summary = chain.invoke({"context": documents})
@@ -469,7 +472,7 @@ async def get_topics(number: int):
             Here is the context to write the topics from\\n\\n{context}\n Topics: """)]
     )
 
-    chain = promptTopics | llm 
+    chain = promptTopics | llmQwen
     result = chain.invoke({"context": summary, "number": number}) 
     topics = convert_to_list(result.content)
 
