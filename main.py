@@ -5,6 +5,7 @@ from typing import Optional, Union
 from uuid import uuid4
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi.responses import StreamingResponse
 from langchain_community.chat_models import ChatOpenAI
@@ -59,9 +60,20 @@ class Groq(ChatOpenAI):
 app = FastAPI()
 
 
+origins = [
+    "https://question-craft-6dzdg3fht-khush-agarwals-projects-f1e6fd1f.vercel.app",
+    "https://qc.khushag.me",
+]
 
 
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 embeddings = HuggingFaceEndpointEmbeddings(
     model="intfloat/multilingual-e5-large-instruct",
