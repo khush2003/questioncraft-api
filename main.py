@@ -452,43 +452,64 @@ async def query(request: EmbeddingRequest):
 
 @app.get("/api/documents")
 async def get_documents():
-    documents = load_documents_from_file()
-    return {"documents": documents}
+    try:
+        documents = load_documents_from_file()
+        if not documents or len(documents) == 0:
+            raise HTTPException(status_code=400, detail="No documents found. Please upload a PDF first.")
+        return {"documents": documents}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error loading documents: {e}")
+        raise HTTPException(status_code=500, detail=f"Error loading documents: {str(e)}")
 
 
 
 @app.get("/api/topics")
 async def get_topics(number: int):
-    documents = load_documents_from_file()
-    print("started")
+    try:
+        documents = load_documents_from_file()
+        
+        if not documents or len(documents) == 0:
+            raise HTTPException(status_code=400, detail="No documents found. Please upload a PDF first.")
+        
+        print("started")
 
-    promptSummary = ChatPromptTemplate.from_messages(
-        [("system", "Write a summary of the main topics from the following:\\n\\n{context}")]
-    )
-    print("Passed 1")
+        promptSummary = ChatPromptTemplate.from_messages(
+            [("system", "Write a summary of the main topics from the following:\\n\\n{context}")]
+        )
+        print("Passed 1")
 
-    llmQwen.temperature = 0
-    chain = create_stuff_documents_chain(llmQwen, promptSummary)
-    print("Passed 2")
-    print(documents)
-    summary = chain.invoke({"context": documents})
-    print("Passed 3")
-    print(summary)
+        llmQwen.temperature = 0
+        chain = create_stuff_documents_chain(llmQwen, promptSummary)
+        print("Passed 2")
+        print(documents)
+        summary = chain.invoke({"context": documents})
+        print("Passed 3")
+        print(summary)
 
-    promptTopics = ChatPromptTemplate.from_messages(
-        [("system", """Write a list of the {number} main topics and ensure that the number of topics is {number} only. 
+        promptTopics = ChatPromptTemplate.from_messages(
+            [("system", """Write a list of the {number} main topics and ensure that the number of topics is {number} only. 
           You will be penalized if you write more than or less than {number} topics. Do not respond with other words, just the list of topics. 
           Format of answer: [<Topic1>, <Topic2> ...]
             Example Answer: [Topic1, Topic2, Topic3]
             Ensure that you only answer with list of topics.
             Here is the context to write the topics from\\n\\n{context}\n Topics: """)]
-    )
+        )
 
-    chain = promptTopics | llmQwen
-    result = chain.invoke({"context": summary, "number": number}) 
-    topics = convert_to_list(result.content)
+        chain = promptTopics | llmQwen
+        result = chain.invoke({"context": summary, "number": number}) 
+        topics = convert_to_list(result.content)
+        
+        if not topics or len(topics) == 0:
+            raise HTTPException(status_code=500, detail="Failed to generate topics. Please try again.")
 
-    return {"topics": topics, "summary": summary}
+        return {"topics": topics, "summary": summary}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error generating topics: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generating topics: {str(e)}")
 
 #TODO: Failsafe when extracted text is empty, do not continue and tell the user that could not extract text from pdf
 
@@ -628,7 +649,7 @@ async def pdf(file: UploadFile = File(...), fastMode: Optional[bool] = False):
                 # pil_image = image.to_pil()
                 # abc = perform_ocr(pil_image)
             texts.append(abc)
-            yield json.dumps({"text": abc, "pageNum": i + 1}) + "\n"
+            yield json.dumps({"text": abc, "pageNum": i}) + "\n"
 
     return StreamingResponse(result_generator(), media_type="application/json")
 
