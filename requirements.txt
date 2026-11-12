@@ -1,18 +1,4 @@
-fastapi
-uvicorn
-pdf2image
-langchain
-langchain-community
-langchain-core
-langchain-huggingface
-dotenv
-pydantic
-pypdfium2
-langchain-classic
-openai
-python-multipart
---extra-index-url https://www.paddlepaddle.org.cn/packages/stable/cpu/
-paddlepaddle==3.2.2
-paddleocr==3.3.2
-faiss-cpu
-huggingface_hub
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+pydantic==2.5.0
